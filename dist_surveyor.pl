@@ -1,13 +1,127 @@
-package Dist::Surveyor;
-{
-  $Dist::Surveyor::VERSION = '0.001';
-}
+#!/bin/env perl
 
-# ABSTRACT: Survey installed modules and determine the specific distribution versions they came from
+=head1 NAME
+
+dist_surveyor.pl - determine exactly what dist versions are installed
+
+=head1 SYNOPSIS
+
+  dist_surveyor.pl [options] /some/perl/lib/dir
+
+=head1 DESCRIPTION
+
+This utility examines all the modules installed within the specified perl
+library directory and uses the metacpan API to work out what versions of what
+distributions could have provided those modules. It then works out which of
+those candidate distributions is the most likely one. It is fairly robust and
+copes well with edge cases like installation of non-released versions from git
+repos and local modifications.
+
+Distributions are written to stdout. Progress and issues are reported to stderr.
+
+It can take a long time to run for the first time on a directory with a
+large number of modules and candidate distributions.  The data fetched from
+metacpan is cached so future runs are much faster.  (The system this code was
+tested on took about 60 minutes to process around 500 distributions with no
+cached data, and under 10 minutes for later runs that coud reuse the cached
+data. The cache file ended up about 40MB in size.)
+
+=head1 OPTIONS
+
+    --verbose    Show more detailed progress
+
+    --debug      Show much more information
+
+    --match R    Ignore modules that don't match regex R (unanchored)
+
+    --perlver V  Ignore modules that are shipped with perl version V
+
+    --remnants   Include old distribution versions that have left old modules behind
+
+    --uncached   Don't use or update the persistent cache
+
+    --makecpan D Create a CPAN repository in directory D
+
+    --output S   List of field names ot output, separate by spaces.
+                 
+    --format S   Printf format string with a %s for each field in --output
+
+=head2 --makecpan
+
+Creates a CPAN repository in the specified directory by fetching the selected
+distributions into authors/id/... and writing the index files into modules/...
+
+If the directory already exists then selected distributions that already exist
+are not refetched, any distributions that already exist but aren't selected by
+this run are left in place.
+
+New package distribution information is merged into the modules/02packages index file.
+
+Some additional files are written into a dist_surveyor subdirectory:
+
+=head3 dist_surveyor/token_packages.txt
+
+This file lists one unique 'token package' per distribution. It's very useful
+to speed up re-running a full install after some distributions have failed.
+
+=head1 WORKING WITH THE RESULTS
+
+Firsly you should check the results related to any modules that generated
+warnings during the run.
+
+You can use cpanm --scandeps to put the list in dependency order:
+
+    dist_surveyor.pl --makecpan my_cpan /some/perl/lib/dir > installed_dists.txt
+    cpanm --mirror file:$PWD/my_cpan [--mirror-only] -l new_lib < installed_dists.txt
+
+That will always reinstall all the listed distributions. If some distributions
+fail to install (typically due to test failures) then it's much faster to use the
+'token package list':
+
+    cpanm --mirror file:$PWD/my_cpan [--mirror-only] -l new_lib < my_cpan/dist_surveyor/token_packages.txt
+
+Using package name allows cpanm to skip those that it knows are already installed.
+
+=head1 BUGS
+
+Probably.
+
+The fine metacpan folk will probably want to shoot me for the load this places
+on their servers.
+
+=head1 POSSIBLE ENHANCEMENTS
+
+* Auto-detect when directory given isn't the root of a perl library dir tree.
+    E.g. by matching file names to module names
+
+* Sort out ExtUtils::Perllocal::Parser situation
+
+* Avoid hard-coded %distro_key_mod_names related to perllocal.pod where the
+    dist name doesn't match the key module name.
+
+* Optimise use of metacpan. Use ElasticSearch.pm.
+
+* For installed modules get the file modification time (last commit time)
+    and use it to eliminate candidate dists that were released after that time.
+
+* Add support for matching Foo.pm.PL files (e.g. FCGI and common::sense)
+
+* Consider factoring in release status ('authorized') so rogue releases
+    that ship copies of many other modules (like Net-Braintree-0.1.1)
+    are given a lower priority.
+
+* Fully handle merging of pre-existing --makecpan directory data files.
+
+* Consider factoring install date in the output ordering. May help with edge cases
+    where a package P is installed via distros A then B. If A is reinstalled after B
+    then the reinstalled P will be from A but should be from B. (I don't know of any
+    cases, but it's certainly a possibility. The LWP breakup and Class::MOP spring to
+    mind as possible candidates.)
+
+=cut
 
 use strict;
 use warnings;
-
 use version;
 use autodie;
 use Carp;
@@ -41,6 +155,8 @@ use URI;
 use constant PROGNAME => 'dist_surveyor';
 use constant ON_WIN32 => $^O eq 'MSWin32';
 use constant ON_VMS   => $^O eq 'VMS';
+
+$| = 1;
 
 GetOptions(
     'match=s' => \my $opt_match,

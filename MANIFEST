@@ -1,0 +1,16 @@
+Changes
+LICENSE
+MANIFEST
+META.json
+META.yml
+Makefile.PL
+README
+dist.ini
+dist_surveyor
+dist_surveyor.pl
+lib/Dist/Surveyor.pm
+t/00-compile.t
+xt/release/distmeta.t
+xt/release/pod-coverage.t
+xt/release/pod-syntax.t
+xt/release/portability.t
