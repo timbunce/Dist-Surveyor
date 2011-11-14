@@ -117,10 +117,16 @@ my %distro_key_mod_names = (
 
 
 # give only top-level lib dir, the archlib will be added automatically
-my @libdir = shift;
+my @libdir = shift @ARGV or die "No perl lib directory specified\n";
 die "$libdir[0] isn't a directory\n" unless -d $libdir[0];
-if (-d (my $archdir = "$libdir[0]/$Config{archname}")) {
+my $archdir = "$libdir[0]/$Config{archname}";
+if (-d $archdir) {
     unshift @libdir, $archdir;
+}
+else {
+    warn "No $Config{archname} directory in $libdir[0].\n";
+    warn "This probably means you've given the wrong directory\n";
+    warn "(or that you're using the wrong perl build).\n";
 }
 
 my @installed_releases = determine_installed_releases(@libdir);
