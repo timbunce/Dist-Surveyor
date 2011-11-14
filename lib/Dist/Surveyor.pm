@@ -116,6 +116,8 @@ my %distro_key_mod_names = (
 );
 
 
+sub main {
+
 # give only top-level lib dir, the archlib will be added automatically
 my @libdir = shift @ARGV or die "No perl lib directory specified\n";
 die "$libdir[0] isn't a directory\n" unless -d $libdir[0];
@@ -136,7 +138,16 @@ warn sprintf "Completed survey in %.1f minutes using %d metacpan calls.\n",
     (time-$^T)/60, $metacpan_calls;
 
 
-if ($opt_makecpan) {
+do_makecpan(@installed_releases)
+    if $opt_makecpan;
+
+exit $major_error_count;
+}
+
+
+sub do_makecpan {
+    my (@installed_releases) = @_;
+
     warn "Updating $opt_makecpan for ".@installed_releases." releases...\n";
     mkpath("$opt_makecpan/modules");
 
@@ -302,8 +313,6 @@ if ($opt_makecpan) {
 
     warn "$opt_makecpan updated.\n"
 }
-
-exit $major_error_count;
 
 
 

@@ -127,9 +127,11 @@ use warnings;
 
 $| = 1;
 
+require Dist::Surveyor;
+
 # XXX nasty quick hack conversion from script to module
 # TODO refactor to give Dist::Surveyor a reasonable simple API
 # and use that here
-require Dist::Surveyor;
+Dist::Surveyor::main(@ARGV);
 
 exit 0;
