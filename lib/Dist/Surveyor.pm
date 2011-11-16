@@ -460,6 +460,8 @@ sub determine_installed_releases {
 
         my $note = "";
         if (@$best > 1) { # try using perllocal.pod to narrow the options
+            # XXX TODO move this logic into the per-candidate-distro loop below
+            # it doesn't make much sense to be here at the per-module level
             my @in_perllocal = grep {
                 my $distname = $_->{distribution};
                 my ($v, $dist_mod_name) = perllocal_distro_mod_version($distname, $installed_meta->{perllocalpod});
