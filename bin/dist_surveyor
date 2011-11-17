@@ -95,18 +95,14 @@ dist_surveyor and the new perl to run cpanm.
 
 Probably.
 
-The fine metacpan folk will probably want to shoot me for the load this places
-on their servers.
-
 =head1 TODO
 
-    * Polish up, refactor, add tests etc.
+    * Polish up, refactor, add tests etc. Including making Dist::Surveyor a proper
+        module that exports functions (or uses methods) and changing dist_surveyor
+        to use that interface.
 
     * Auto-detect when directory given isn't the root of a perl library dir tree.
         E.g. by matching file names to module names
-
-    * Avoid hard-coded %distro_key_mod_names related to perllocal.pod where the
-        dist name doesn't match the key module name.
 
     * Add support for matching Foo.pm.PL files (e.g. FCGI and common::sense)
 
@@ -118,8 +114,11 @@ on their servers.
         are given a lower priority.
 
     * Sort out ExtUtils::Perllocal::Parser situation
+        Avoid hard-coded %distro_key_mod_names related to perllocal.pod where the
+        dist name doesn't match the key module name.
+        Or maybe just remove use of distro_key_mod_names and perllocal entirely?
 
-    * Optimise use of metacpan. Use ElasticSearch.pm.
+    * Optimise use of metacpan. Check caching. Use ElasticSearch.pm.
 
     * Fully handle merging of pre-existing --makecpan directory data files.
 

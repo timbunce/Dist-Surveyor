@@ -1,6 +1,14 @@
 package Dist::Surveyor;
 
-# ABSTRACT: Survey installed modules and determine the specific distribution versions they came from
+=head1 NAME
+
+Dist::Surveyor - Survey installed modules and determine the specific distribution versions they came from
+
+=head1 SYNOPSIS
+
+See L<dist_surveyor> for documentation.
+
+=cut
 
 use strict;
 use warnings;
