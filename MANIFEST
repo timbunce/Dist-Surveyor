@@ -8,9 +8,7 @@ README
 dist.ini
 dist_surveyor
 dist_surveyor.log
-dist_surveyor.pl
 lib/Dist/Surveyor.pm
-nohup.out
 t/00-compile.t
 xt/release/distmeta.t
 xt/release/pod-coverage.t
