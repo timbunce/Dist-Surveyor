@@ -55,4 +55,7 @@ requires:
   strict: 0
   version: 0
   warnings: 0
+resources:
+  homepage: http://github.com/timbunce/Dist-Surveyor/tree
+  repository: git://github.com/timbunce/Dist-Surveyor.git
 version: 0.001

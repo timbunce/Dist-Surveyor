@@ -73,6 +73,14 @@
       }
    },
    "release_status" : "stable",
+   "resources" : {
+      "homepage" : "http://github.com/timbunce/Dist-Surveyor/tree",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/timbunce/Dist-Surveyor.git",
+         "web" : "http://github.com/timbunce/Dist-Surveyor/tree"
+      }
+   },
    "version" : "0.001"
 }
 

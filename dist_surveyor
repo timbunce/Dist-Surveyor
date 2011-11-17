@@ -13,9 +13,10 @@ dist_surveyor - determine exactly what dist versions are installed
 This utility examines all the modules installed within the specified perl
 library directory and uses the metacpan API to work out what versions of what
 distributions could have provided those modules. It then works out which of
-those candidate distributions is the most likely one. It is fairly robust and
-copes well with edge cases like installation of non-released versions from git
-repos and local modifications.
+those candidate distributions is the most likely one.
+
+It is fairly robust and copes well with edge cases like installation of
+non-released versions from git repos and local modifications.
 
 Distributions are written to stdout. Progress and issues are reported to stderr.
 
@@ -23,7 +24,7 @@ It can take a long time to run for the first time on a directory with a
 large number of modules and candidate distributions.  The data fetched from
 metacpan is cached so future runs are much faster.  (The system this code was
 tested on took about 60 minutes to process around 500 distributions with no
-cached data, and under 10 minutes for later runs that coud reuse the cached
+cached data, and under 10 minutes for later runs that could reuse the cached
 data. The cache file ended up about 40MB in size.)
 
 =head1 OPTIONS
@@ -42,7 +43,7 @@ data. The cache file ended up about 40MB in size.)
 
     --makecpan D Create a CPAN repository in directory D
 
-    --output S   List of field names ot output, separate by spaces.
+    --output S   List of field names to output, separate by spaces.
                  
     --format S   Printf format string with a %s for each field in --output
 
@@ -64,18 +65,24 @@ Some additional files are written into a dist_surveyor subdirectory:
 This file lists one unique 'token package' per distribution. It's very useful
 to speed up re-running a full install after some distributions have failed.
 
-=head1 WORKING WITH THE RESULTS
+=head1 USAGE
 
-Firsly you should check the results related to any modules that generated
-warnings during the run.
+Run a survey and create a mini-CPAN repository containing the distributions:
 
     dist_surveyor --makecpan my_cpan /some/perl/lib/dir > installed_dists.txt
+
+It's important to give the correct perl lib directory path.
+
+It's important to check the results related to any modules that generated
+warnings during the run.
+
+Install those distributions into a new library:
 
     cpanm --mirror file:$PWD/my_cpan [--mirror-only] -l new_lib < installed_dists.txt
 
 That will always reinstall all the listed distributions. If some distributions
 fail to install (typically due to test failures) then it's I<much> faster to use the
-'token package list':
+'token package list' on later runs:
 
     cpanm --mirror file:$PWD/my_cpan [--mirror-only] -l new_lib < my_cpan/dist_surveyor/token_packages.txt
 
@@ -91,7 +98,9 @@ Probably.
 The fine metacpan folk will probably want to shoot me for the load this places
 on their servers.
 
-=head1 POSSIBLE ENHANCEMENTS
+=head1 TODO
+
+    * Polish up, refactor, add tests etc.
 
     * Auto-detect when directory given isn't the root of a perl library dir tree.
         E.g. by matching file names to module names
