@@ -37,7 +37,6 @@
             "DB_File" : 0,
             "Data::Dumper::Concise" : 0,
             "Digest::SHA" : 0,
-            "ExtUtils::Perllocal::Parser" : 0,
             "Fcntl" : 0,
             "File::Basename" : 0,
             "File::Fetch" : 0,
