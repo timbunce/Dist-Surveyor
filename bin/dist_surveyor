@@ -4,6 +4,10 @@
 
 dist_surveyor - determine exactly what dist versions are installed
 
+=head1 VERSION
+
+version 0.001
+
 =head1 SYNOPSIS
 
   dist_surveyor [options] /some/perl/lib/dir

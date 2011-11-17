@@ -19,7 +19,9 @@ my %WriteMakefileArgs = (
     "ExtUtils::MakeMaker" => "6.30"
   },
   "DISTNAME" => "Dist-Surveyor",
-  "EXE_FILES" => [],
+  "EXE_FILES" => [
+    "bin/dist_surveyor"
+  ],
   "LICENSE" => "perl",
   "NAME" => "Dist::Surveyor",
   "PREREQ_PM" => {

@@ -5,8 +5,8 @@ META.json
 META.yml
 Makefile.PL
 README
+bin/dist_surveyor
 dist.ini
-dist_surveyor
 dist_surveyor.log
 lib/Dist/Surveyor.pm
 t/00-compile.t
