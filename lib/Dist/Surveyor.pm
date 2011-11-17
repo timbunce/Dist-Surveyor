@@ -5,7 +5,7 @@ package Dist::Surveyor;
 
 =head1 NAME
 
-Dist::Surveyor
+Dist::Surveyor - Survey installed modules and determine the specific distribution versions they came from
 
 =head1 VERSION
 
@@ -13,7 +13,7 @@ version 0.001
 
 =cut
 
-# ABSTRACT: Survey installed modules and determine the specific distribution versions they came from
+# xABSTRACT: Survey installed modules and determine the specific distribution versions they came from
 
 use strict;
 use warnings;

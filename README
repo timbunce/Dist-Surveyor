@@ -1,5 +1,6 @@
 NAME
-    Dist::Surveyor
+    Dist::Surveyor - Survey installed modules and determine the specific
+    distribution versions they came from
 
 VERSION
     version 0.001
