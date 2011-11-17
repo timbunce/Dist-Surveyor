@@ -11,9 +11,11 @@ Dist::Surveyor - Survey installed modules and determine the specific distributio
 
 version 0.001
 
-=cut
+=head1 SYNOPSIS
 
-# xABSTRACT: Survey installed modules and determine the specific distribution versions they came from
+See L<dist_surveyor> for documentation.
+
+=cut
 
 use strict;
 use warnings;
