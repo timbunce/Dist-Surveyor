@@ -8,6 +8,13 @@ dist_surveyor - determine exactly what dist versions are installed
 
   dist_surveyor [options] /some/perl/lib/dir
 
+Typically a perl library directory will have an architecture specific library
+as a subdirectory. The dist_surveyor script will detect and add it automatically
+if the perl being used has the same 'archname' the same as the one in the library.
+If not, then specify the "archlib" directory explicitly I<first>:
+
+  dist_surveyor [options] /some/perl/lib/dir/archname /some/perl/lib/dir
+
 =head1 DESCRIPTION
 
 This utility examines all the modules installed within the specified perl
@@ -135,7 +142,7 @@ use warnings;
 
 $| = 1;
 
-require Dist::Surveyor;
+use Dist::Surveyor;
 
 # XXX nasty quick hack conversion from script to module
 # TODO refactor to give Dist::Surveyor a reasonable simple API

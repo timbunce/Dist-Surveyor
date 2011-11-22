@@ -124,7 +124,9 @@ my %distro_key_mod_names = (
 sub main {
 
 # give only top-level lib dir, the archlib will be added automatically
-my @libdir = shift @ARGV or die "No perl lib directory specified\n";
+die "Usage: $0 perl-lib-directory\n"
+    unless @ARGV;
+my @libdir = @ARGV;
 die "$libdir[0] isn't a directory\n" unless -d $libdir[0];
 my $archdir = "$libdir[0]/$Config{archname}";
 if (-d $archdir) {
