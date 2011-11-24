@@ -83,20 +83,23 @@ It's important to give the correct perl lib directory path.
 It's important to check the results related to any modules that generated
 warnings during the run.
 
-Install those distributions into a new library:
+Then, to install those distributions into a new library:
 
-    cpanm --mirror file:$PWD/my_cpan [--mirror-only] -l new_lib < installed_dists.txt
+    cpanm --mirror file:$PWD/my_cpan --mirror-only [-l new_lib] < installed_dists.txt
 
-That will always reinstall all the listed distributions. If some distributions
-fail to install (typically due to test failures) then it's I<much> faster to use the
-'token package list' on later runs:
+It's very likely that some distributions will fail tests and not install,
+which will, in turn, cause others to fail. Once the initial run is complete
+study the cpam build log file carefully and resolve the test failures.
 
-    cpanm --mirror file:$PWD/my_cpan [--mirror-only] -l new_lib < my_cpan/dist_surveyor/token_packages.txt
+Running cpanm with a list of distributions, as above, will always reinstall
+I<all> the listed distributions. Even those already sucessfully installed.
 
-Using package name allows cpanm to skip those that it knows are already installed.
+It's much (I<much>) faster to give cpanm a list of package names as that allows
+it to skip those that it knows are already installed. The L</--makecpan> option
+writes a list of 'token packages', one per distribution, so you can use that
+with cpanm:
 
-When using dist_surveyor to migrate perl versions, use the old perl to run
-dist_surveyor and the new perl to run cpanm.
+    cpanm --mirror file:$PWD/my_cpan --mirror-only [-l new_lib] < my_cpan/dist_surveyor/token_packages.txt
 
 =head1 BUGS
 
