@@ -110,8 +110,8 @@ for my $subname (keys %memoize_subs) {
 
 # for distros with names that don't match the principle module name
 # yet the principle module version always matches the distro
-# Used for perllocal.pod lookups
-# # XXX should be automated lookup rather than hardcoded
+# Used for perllocal.pod lookups and for picking 'token packages' for minicpan
+# # XXX should be automated lookup rather than hardcoded (else remove perllocal.pod parsing)
 my %distro_key_mod_names = (
     'PathTools' => 'File::Spec',
     'Template-Toolkit' => 'Template',
@@ -123,22 +123,23 @@ my %distro_key_mod_names = (
 
 sub main {
 
-# give only top-level lib dir, the archlib will be added automatically
-die "Usage: $0 perl-lib-directory\n"
+die "Usage: $0 perl-lib-directory [...]\n"
     unless @ARGV;
-my @libdir = @ARGV;
-die "$libdir[0] isn't a directory\n" unless -d $libdir[0];
-my $archdir = "$libdir[0]/$Config{archname}";
-if (-d $archdir) {
-    unshift @libdir, $archdir;
-}
-else {
-    warn "No $Config{archname} directory in $libdir[0].\n";
-    warn "This probably means you've given the wrong directory\n";
-    warn "(or that you're using the wrong perl build).\n";
+my @libdirs = @ARGV;
+
+# check dirs and add archlib's if appropriate
+for my $libdir (@libdirs) {
+    die "$libdir isn't a directory\n"
+        unless -d $libdir;
+
+    my $archdir = "$libdir/$Config{archname}";
+    if (-d $archdir) {
+        unshift @libdirs, $archdir
+            unless grep { $_ eq $archdir } @libdirs;
+    }
 }
 
-my @installed_releases = determine_installed_releases(@libdir);
+my @installed_releases = determine_installed_releases(@libdirs);
 write_fields(\@installed_releases, $opt_format, [split ' ', $opt_output], \*STDOUT);
 
 warn sprintf "Completed survey in %.1f minutes using %d metacpan calls.\n",
