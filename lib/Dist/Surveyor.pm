@@ -69,7 +69,12 @@ $opt_perlver = version->parse($opt_perlver || $])->numify;
 
 my $major_error_count = 0; # exit status
 
-my $metacpan_size = 999; # don't make too large, hurts the server
+# We have to limit the number of results when using MetaCPAN::API.
+# We can'r make it too large as it hurts the server (it preallocates)
+# but need to make it large enough for worst case distros (eg eBay-API).
+# TODO: switching to the ElasticSearch module, with cursor support, will
+# probably avoid the need for this. Else we could dynamically adjust.
+my $metacpan_size = 1500;
 my $metacpan_calls = 0;
 my $metacpan_api ||= MetaCPAN::API->new(
     ua_args => [ agent => $0 ],
