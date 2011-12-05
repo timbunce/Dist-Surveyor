@@ -72,7 +72,7 @@ Some additional files are written into a dist_surveyor subdirectory:
 This file lists one unique 'token package' per distribution. It's very useful
 to speed up re-running a full install after some distributions have failed.
 
-=head1 USAGE
+=head1 SURVEY USAGE
 
 Run a survey and create a mini-CPAN repository containing the distributions:
 
@@ -82,6 +82,8 @@ It's important to give the correct perl lib directory path.
 
 It's important to check the results related to any modules that generated
 warnings during the run.
+
+=head1 INSTALLATION USAGE
 
 Then, to install those distributions into a new library:
 
@@ -100,6 +102,14 @@ writes a list of 'token packages', one per distribution, so you can use that
 with cpanm:
 
     cpanm --mirror file:$PWD/my_cpan --mirror-only [-l new_lib] < my_cpan/dist_surveyor/token_packages.txt
+
+When a distro fails tests I use the cpanm C<--look> option to investigate:
+
+    cpanm --mirror file:$PWD/my_cpan --mirror-only --look Some::Package
+
+I'll often end up building, testing and installing the distro from within that
+cpanm look shell. Once installed I'll rerun cpanm using the full C<token_packages.txt>
+file again. If there are more failures I'll repeat that sequence till they're all resolved.
 
 =head1 BUGS
 
