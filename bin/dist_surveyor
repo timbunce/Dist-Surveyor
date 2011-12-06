@@ -54,6 +54,8 @@ data. The cache file ended up about 40MB in size.)
                  
     --format S   Printf format string with a %s for each field in --output
 
+    --size I     Set the MetaCPAN size limit
+
 =head2 --makecpan
 
 Creates a CPAN repository in the specified directory by fetching the selected

@@ -62,6 +62,7 @@ GetOptions(
     'output=s' => \(my $opt_output ||= 'url'),
     # e.g., 'some-command --foo --file %s --authorid %s'
     'format=s' => \my $opt_format,
+    'size=i' => \my $opt_size,
 ) or exit 1;
 
 $opt_verbose++ if $opt_debug;
@@ -69,7 +70,7 @@ $opt_perlver = version->parse($opt_perlver || $])->numify;
 
 my $major_error_count = 0; # exit status
 
-my $metacpan_size = 999; # don't make too large, hurts the server
+my $metacpan_size = $opt_size || 999; # don't make too large, hurts the server
 my $metacpan_calls = 0;
 my $metacpan_api ||= MetaCPAN::API->new(
     ua_args => [ agent => $0 ],
