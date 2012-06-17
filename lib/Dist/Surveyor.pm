@@ -74,7 +74,7 @@ my $major_error_count = 0; # exit status
 # but need to make it large enough for worst case distros (eg eBay-API).
 # TODO: switching to the ElasticSearch module, with cursor support, will
 # probably avoid the need for this. Else we could dynamically adjust.
-my $metacpan_size = 1500;
+my $metacpan_size = 2500;
 my $metacpan_calls = 0;
 my $metacpan_api ||= MetaCPAN::API->new(
     ua_args => [ agent => $0 ],
@@ -93,8 +93,8 @@ if (not $opt_uncached) {
     # XXX this locking is flawed but good enough for my needs
     # http://search.cpan.org/~pmqs/DB_File-1.824/DB_File.pm#HINTS_AND_TIPS
     my $fd = $db->fd;
-    open(DB_FH, "+<&=$fd") || die "dup $!";
-    flock (DB_FH, LOCK_EX) || die "flock: $!";
+    open(my $DB_FH, "+<&=$fd") || die "dup $!";
+    flock ($DB_FH, LOCK_EX) || die "flock: $!";
 }
 my %memoize_subs = (
     get_candidate_cpan_dist_releases => { generation => 1 },
@@ -994,7 +994,7 @@ sub perllocal_distro_mod_version {
     our $perllocal_distro_mod_version;
     if (not $perllocal_distro_mod_version) { # initial setup
         warn "Only first perllocal.pod file will be processed: @$perllocalpod\n"
-            if @$perllocalpod > 1;
+            if ref $perllocalpod eq 'ARRAY' and @$perllocalpod > 1;
 
         $perllocal_distro_mod_version = {};
         # extract data from perllocal.pod
